@@ -58,13 +58,16 @@ public class R66ServerDBInitializer {
 				conn = DriverManager.getConnection(dbServer, dbuser, dbpass);
 				stmt = conn.createStatement();
 
-				String s3mappingtab = "CREATE TABLE IF NOT EXISTS S3BUCKETMAPPING" + "(id int(11) NOT NULL AUTO_INCREMENT,"
-						+ "filename varchar(500) NOT NULL," +"uuid varchar(500) NOT NULL,"
-						+ "specialKey varchar(450) NULL,"
-						+ "s3fileurl varchar(450) NULL," + "processedOn DATETIME,"+ "deleted char(1) NOT NULL,"
-						+ "PRIMARY KEY (id))";
+				String s3mappingtab = "CREATE TABLE S3BUCKETMAPPING" + "(id int(11) NOT NULL AUTO_INCREMENT,"
+						+ "uuid varchar(450) NOT NULL," + "specialKey varchar(450) NOT NULL,"
+						+ "s3fileurl varchar(450) NOT NULL," + "processedOn DATETIME,"
+						+ "deleted char(1) NOT NULL," + "PRIMARY KEY (id))";
 
+				String fileNametab = "CREATE TABLE S3FILENAMEHANDLER" + "(id int(11) NOT NULL AUTO_INCREMENT,"
+						+ "filename varchar(500) NOT NULL," + "uuid varchar(500) NOT NULL," + "processedOn DATETIME,"
+						+"deleted char(1) NOT NULL,"+ "PRIMARY KEY (id))";
 				stmt.executeUpdate(s3mappingtab);
+				stmt.executeUpdate(fileNametab);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
