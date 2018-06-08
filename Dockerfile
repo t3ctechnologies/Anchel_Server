@@ -9,6 +9,6 @@ RUN rm -rf /usr/local/my_app
 
 ENV JPDA_ADDRESS="8000"
 ENV JPDA_TRANSPORT="dt_socket"
-EXPOSE 8080 8000
+EXPOSE 8080 8000 21
 RUN chmod +x /usr/local/tomcat/bin/catalina.sh
 CMD ["catalina.sh", "run"]
