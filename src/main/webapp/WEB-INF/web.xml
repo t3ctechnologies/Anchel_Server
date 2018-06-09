@@ -6,6 +6,9 @@
 	<display-name>WaarpServer Web Application</display-name>
 	
 	<listener>
+   	 	<listener-class>se.jiderhamn.classloader.leak.prevention.ClassLoaderLeakPreventor</listener-class>
+	</listener>
+	<listener>
 		<listener-class>com.t3c.anchel.R66ServerListener</listener-class>
 	</listener>
 	
