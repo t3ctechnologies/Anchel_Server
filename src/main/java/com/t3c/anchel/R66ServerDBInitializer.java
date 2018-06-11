@@ -7,11 +7,15 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 import java.util.Properties;
 
-import com.t3c.anchel.openr66.server.ServerInitDatabase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.waarp.openr66.server.ServerInitDatabase;
 
 
 public class R66ServerDBInitializer {
 
+	private static final Logger logger = LoggerFactory.getLogger(GatewayServerListener.class);
+	
 	public void initdb() {
 		Properties properties = new Properties();
 		Connection conn = null;
@@ -32,12 +36,19 @@ public class R66ServerDBInitializer {
 		String[] update = { waarpconfig, "-upgradeDb" };
 		if (propcondition.equals(mycondition1)) {
 			String[] waarpdbinit = { waarpconfig, "-initdb" };
+			logger.debug("Waarp R66 server databse is initiated");
 			String[] loadBusiness = { waarpconfig, "-loadBusiness", waarpconfig };
+			logger.debug("Waarp R66 server, business configuration is loaded");
 			String[] loadAlias = { waarpconfig, "-loadAlias", waarpconfig };
+			logger.debug("Waarp R66 server, aliases configuration is loaded");
 			String[] loadRoles = { waarpconfig, "-loadRoles", waarpconfig };
+			logger.debug("Waarp R66 server, roles configuration is loaded");
 			String[] loadRules = { waarpconfig, "-dir", directory };
+			logger.debug("Waarp R66 server, directory configuration is loaded");
 			String[] loadAuths = { waarpconfig, "-auth", waarpauthFile.toString() };
+			logger.debug("Waarp R66 server, auth configuration is loaded");
 			String[] loadLimit = { waarpconfig, "-limit", waarplimitFile.toString() };
+			logger.debug("Waarp R66 server, limit configuration is loaded");
 			ServerInitDatabase.initR66database(waarpdbinit);
 
 			ServerInitDatabase.initR66database(loadBusiness);

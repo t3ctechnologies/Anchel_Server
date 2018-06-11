@@ -4,12 +4,17 @@ import java.io.File;
 
 import javax.servlet.ServletContextEvent;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.context.ContextLoaderListener;
+import org.waarp.openr66.protocol.exception.OpenR66ProtocolPacketException;
+import org.waarp.openr66.server.R66Server;
+
 import com.mysql.jdbc.AbandonedConnectionCleanupThread;
-import com.t3c.anchel.openr66.protocol.exception.OpenR66ProtocolPacketException;
-import com.t3c.anchel.openr66.server.R66Server;
 
 public class R66ServerListener extends ContextLoaderListener {
+
+	private static final Logger logger = LoggerFactory.getLogger(GatewayServerListener.class);
 
 	public void contextInitialized(ServletContextEvent arg0) {
 		new R66ServerDBInitializer().initdb();
@@ -20,6 +25,7 @@ public class R66ServerListener extends ContextLoaderListener {
 				path = configFile.toString();
 			}
 			String[] waarpconfig = { path };
+			logger.debug("Waarp R66 server databse is initiating");
 			R66Server.initR66Server(waarpconfig);
 		} catch (OpenR66ProtocolPacketException e) {
 			e.printStackTrace();
@@ -28,7 +34,7 @@ public class R66ServerListener extends ContextLoaderListener {
 
 	public void contextDestroyed(ServletContextEvent arg0) {
 		AbandonedConnectionCleanupThread.checkedShutdown();
-		System.out.println("R66Server terminated");
+		logger.debug("Waarp R66 server is terminated");
 	}
 
 }

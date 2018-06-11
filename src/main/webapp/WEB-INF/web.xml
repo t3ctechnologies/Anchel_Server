@@ -11,5 +11,4 @@
 	<listener>
 		<listener-class>com.t3c.anchel.GatewayServerListener</listener-class>
 	</listener> 
-	
 </web-app>
