@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 import javax.servlet.ServletContextEvent;
-
+import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 import org.springframework.web.context.ContextLoaderListener;
 
 import com.t3c.anchel.gateway.ftp.ExecGatewayFtpServer;
