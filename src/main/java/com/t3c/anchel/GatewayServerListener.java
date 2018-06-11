@@ -41,6 +41,7 @@ public class GatewayServerListener extends ContextLoaderListener {
 	}
 
 	public void contextDestroyed(ServletContextEvent arg0) {
+		AbandonedConnectionCleanupThread.checkedShutdown();
 		System.out.println("GatewayServer terminated");
 	}
 }

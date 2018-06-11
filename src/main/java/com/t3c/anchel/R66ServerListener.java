@@ -27,6 +27,7 @@ public class R66ServerListener extends ContextLoaderListener {
 	}
 
 	public void contextDestroyed(ServletContextEvent arg0) {
+		AbandonedConnectionCleanupThread.checkedShutdown();
 		System.out.println("R66Server terminated");
 	}
 
