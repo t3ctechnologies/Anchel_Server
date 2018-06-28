@@ -11,11 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.waarp.openr66.server.ServerInitDatabase;
 
-
 public class R66ServerDBInitializer {
 
 	private static final Logger logger = LoggerFactory.getLogger(GatewayServerListener.class);
-	
+
 	public void initdb() {
 		Properties properties = new Properties();
 		Connection conn = null;
@@ -70,15 +69,11 @@ public class R66ServerDBInitializer {
 				stmt = conn.createStatement();
 
 				String s3mappingtab = "CREATE TABLE S3BUCKETMAPPING" + "(id int(11) NOT NULL AUTO_INCREMENT,"
-						+ "uuid varchar(450) NOT NULL," + "specialKey varchar(450) NOT NULL,"
-						+ "s3fileurl varchar(450) NOT NULL," + "processedOn DATETIME,"
-						+ "deleted char(1) NOT NULL," + "PRIMARY KEY (id))";
+						+ "uuid varchar(450) NOT NULL," + "size varchar(450) NOT NULL,"
+						+ "s3fileurl varchar(450) NOT NULL," + "processedOn DATETIME," + "deleted char(1) NOT NULL,"
+						+ "PRIMARY KEY (id))";
 
-				String fileNametab = "CREATE TABLE S3FILENAMEHANDLER" + "(id int(11) NOT NULL AUTO_INCREMENT,"
-						+ "filename varchar(500) NOT NULL," + "uuid varchar(500) NOT NULL," + "processedOn DATETIME,"
-						+"deleted char(1) NOT NULL,"+ "PRIMARY KEY (id))";
 				stmt.executeUpdate(s3mappingtab);
-				stmt.executeUpdate(fileNametab);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
