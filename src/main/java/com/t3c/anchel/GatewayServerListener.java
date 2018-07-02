@@ -2,6 +2,10 @@ package com.t3c.anchel;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Enumeration;
 import java.util.Properties;
 
 import javax.servlet.ServletContextEvent;
@@ -11,8 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.context.ContextLoaderListener;
 import org.waarp.gateway.ftp.ExecGatewayFtpServer;
 import org.waarp.gateway.ftp.ServerInitDatabase;
-
-import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 
 public class GatewayServerListener extends ContextLoaderListener {
 
@@ -45,12 +47,29 @@ public class GatewayServerListener extends ContextLoaderListener {
 			ServerInitDatabase.initGatewayDB(gatearray);
 			logger.debug("Waarp gateway server databse is initiated");
 		}
-		logger.debug("Waarp gateway server is initiating");
+		logger.debug("Waarp gateway server is starting");
 		ExecGatewayFtpServer.initGatewayServer(configFiles);
+		logger.debug("Waarp gateway server is started");
 	}
 
 	public void contextDestroyed(ServletContextEvent arg0) {
-		AbandonedConnectionCleanupThread.checkedShutdown();
+		ClassLoader cl = Thread.currentThread().getContextClassLoader();
+		Enumeration<Driver> drivers = DriverManager.getDrivers();
+		while (drivers.hasMoreElements()) {
+			Driver driver = drivers.nextElement();
+			if (driver.getClass().getClassLoader() == cl) {
+				try {
+					logger.info("Deregistering JDBC driver {}", driver);
+					DriverManager.deregisterDriver(driver);
+				} catch (SQLException e) {
+					e.printStackTrace();
+					logger.error("Error deregistering JDBC driver {}", driver, e);
+				}
+			} else {
+				logger.trace("Not deregistering JDBC driver {} as it does not belong to this webapp's ClassLoader",
+						driver);
+			}
+		}
 		logger.debug("Waarp gateway server terminated");
 	}
 }

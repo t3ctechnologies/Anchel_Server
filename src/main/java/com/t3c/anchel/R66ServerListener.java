@@ -1,7 +1,10 @@
 package com.t3c.anchel;
 
 import java.io.File;
+import java.sql.Driver;
+import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Enumeration;
 
 import javax.servlet.ServletContextEvent;
 
@@ -10,8 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.context.ContextLoaderListener;
 import org.waarp.openr66.protocol.exception.OpenR66ProtocolPacketException;
 import org.waarp.openr66.server.R66Server;
-
-import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 
 public class R66ServerListener extends ContextLoaderListener {
 
@@ -38,8 +39,24 @@ public class R66ServerListener extends ContextLoaderListener {
 	}
 
 	public void contextDestroyed(ServletContextEvent arg0) {
-		AbandonedConnectionCleanupThread.checkedShutdown();
-		logger.debug("Waarp R66 server is terminated");
+		ClassLoader cl = Thread.currentThread().getContextClassLoader();
+		Enumeration<Driver> drivers = DriverManager.getDrivers();
+		while (drivers.hasMoreElements()) {
+			Driver driver = drivers.nextElement();
+			if (driver.getClass().getClassLoader() == cl) {
+				try {
+					logger.info("Deregistering JDBC driver {}", driver);
+					DriverManager.deregisterDriver(driver);
+				} catch (SQLException e) {
+					e.printStackTrace();
+					logger.error("Error deregistering JDBC driver {}", driver, e);
+				}
+			} else {
+				logger.trace("Not deregistering JDBC driver {} as it does not belong to this webapp's ClassLoader",
+						driver);
+			}
+		}
+		logger.error("Waarp R66 server is terminated");
 	}
 
 }
