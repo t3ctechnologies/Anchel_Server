@@ -1,5 +1,5 @@
 # Docker file for tomcat
-FROM tomcat:8.0.43-jre8
+FROM tomcat:8.5-jre10
 
 # Extracting the war started
 ADD . /usr/local/my_app/
