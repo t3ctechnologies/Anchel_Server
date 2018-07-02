@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
@@ -15,7 +16,7 @@ public class R66ServerDBInitializer {
 
 	private static final Logger logger = LoggerFactory.getLogger(GatewayServerListener.class);
 
-	public void initdb() {
+	public void initdb() throws SQLException {
 		Properties properties = new Properties();
 		Connection conn = null;
 		Statement stmt = null;
@@ -76,6 +77,12 @@ public class R66ServerDBInitializer {
 				stmt.executeUpdate(s3mappingtab);
 			} catch (Exception e) {
 				e.printStackTrace();
+				logger.error("Table S3BUCKETMAPPING is not created because of : " + e.getMessage());
+			} finally {
+				if (conn != null && stmt != null) {
+					conn.close();
+					stmt.close();
+				}
 			}
 		}
 		if (propcondition.equals(mycondition2)) {

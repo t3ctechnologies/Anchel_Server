@@ -1,6 +1,7 @@
 package com.t3c.anchel;
 
 import java.io.File;
+import java.sql.SQLException;
 
 import javax.servlet.ServletContextEvent;
 
@@ -17,8 +18,8 @@ public class R66ServerListener extends ContextLoaderListener {
 	private static final Logger logger = LoggerFactory.getLogger(GatewayServerListener.class);
 
 	public void contextInitialized(ServletContextEvent arg0) {
-		new R66ServerDBInitializer().initdb();
 		try {
+			new R66ServerDBInitializer().initdb();
 			File configFile = new File(this.getClass().getClassLoader().getResource("config-serverA.xml").getFile());
 			String path = null;
 			if (configFile.exists()) {
@@ -29,6 +30,10 @@ public class R66ServerListener extends ContextLoaderListener {
 			R66Server.initR66Server(waarpconfig);
 		} catch (OpenR66ProtocolPacketException e) {
 			e.printStackTrace();
+			logger.error("Waarp R66 server is not started " + e.getMessage());
+		} catch (SQLException e) {
+			e.printStackTrace();
+			logger.error("Waarp R66 database is not initiated properly " + e.getMessage());
 		}
 	}
 
